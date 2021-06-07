@@ -7,6 +7,7 @@ Created on May 11 22:42:06 2021
 
 import matplotlib.pyplot as plt
 import numpy as np
+import NanoNode
 from mpl_toolkits.mplot3d import Axes3D
 
 
@@ -23,9 +24,22 @@ def data_for_cylinder_along_z(center_x, center_y, radius, height_z):
     return z_grid, y_grid, x_grid
 
 
-def drawPlot(rad, ax):
+def drawPlot(rad, ax, nodeList):
+    """
+
+    :param rad: vein radius
+    :param ax:
+    :param nodeList:
+    :return:
+    """
     ax.clear()
     ax.scatter(25, 0, rad)
+    for node in nodeList:
+        ax.scatter(node.x, node.coordinates[0], node.coordinates[1])
+    #ax.scatter(nodeList[0].x, nodeList[0].coordinates[0], nodeList[0].coordinates[1], label='1')
+    #ax.scatter(nodeList[0].x, nodeList[1].coordinates[0], nodeList[1].coordinates[1], label='2')
+    plt.legend(loc='upper left')
+
     ax.text(26, 0, rad, "router")
 
     Xc, Yc, Zc = data_for_cylinder_along_z(0, 0, rad, 50)

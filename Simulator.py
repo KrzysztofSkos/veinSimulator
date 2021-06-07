@@ -9,14 +9,34 @@ import time
 import matplotlib.pyplot as plt
 from NanoNode import NanoNode
 import Drawing
+import numpy as np
 
-# node = NanoNode(10, [10, 10, 10], 10, 1)
-# node.printData()
+veinDiameter = 4
+nodeCount = 1
+nodeList = []
+# Generowanie nano urządzeń
+for i in range(nodeCount):
+    node = NanoNode(veinDiameter, [25, 0, veinDiameter / 2], 10, 1)
+    nodeList.append(node)
+    node.printData()
 
+# Rysowanie wykresu
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
+Drawing.drawPlot(veinDiameter/2, ax, nodeList)
 
-for i in range(3, 10):
+# Logika programu
+for x in np.arange(0, 50, 0.1):
+    for node in nodeList:
+        node.flowStep(x)
+        node.printData()
+        #time.sleep(1)
+
+
+"""
+for i in range(5, 10):
     print(i)
-    Drawing.drawPlot(i, ax)
+    Drawing.drawPlot(i, ax, nodeList)
+
     time.sleep(1)
+"""
