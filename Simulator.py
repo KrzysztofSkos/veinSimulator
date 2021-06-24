@@ -12,25 +12,31 @@ import Drawing
 import numpy as np
 
 veinDiameter = 4
-nodeCount = 1
+nodeCount = 2
 nodeList = []
 # Generowanie nano urządzeń
 for i in range(nodeCount):
     node = NanoNode(veinDiameter, [25, 0, veinDiameter / 2], 10, 1)
     nodeList.append(node)
-    node.printData()
+    #node.printData()
 
 # Rysowanie wykresu
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 Drawing.drawPlot(veinDiameter/2, ax, nodeList)
 
+
 # Logika programu
-for x in np.arange(0, 50, 0.1):
+for x in np.arange(0, 50, 1):
+    print("=================================")
+    print("Printing nodes in step: " + str(x))
     for node in nodeList:
         node.flowStep(x)
         node.printData()
-        #time.sleep(1)
+        print("***************")
+    Drawing.drawPlot(veinDiameter / 2, ax, nodeList)
+    time.sleep(1)
+
 
 
 """

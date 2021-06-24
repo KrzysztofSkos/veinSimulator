@@ -13,6 +13,8 @@ from math import dist
 
 class NanoNode:
     coordinates = [0, 0]  # y and z
+    coordinateY = 0
+    coordinateZ = 0
     x = 0.0
     R = 0.0  # distance from vein center
     inRouterRange = False
@@ -23,9 +25,9 @@ class NanoNode:
 
     def __init__(self, d, routerCoordinates, offsetRange, routerRange):
         # d - vein diameter
-        self.coordinates[0] = uniform(-d / 2, d / 2)
-        self.coordinates[1] = uniform(-d / 2, d / 2)
-        self.R = dist(self.coordinates, [0, 0])
+        self.coordinateY = uniform(-d / 2, d / 2)
+        self.coordinateZ = uniform(-d / 2, d / 2)
+        self.R = dist([self.coordinateY, self.coordinateZ], [0, 0])
         self.offset = randrange(offsetRange)
         self.commSuccess = False
         if self.offset == 0:
@@ -33,7 +35,7 @@ class NanoNode:
         else:
             self.isSendingMessage = False
 
-        if dist(routerCoordinates, [self.coordinates[0], self.coordinates[1], self.x]) < routerRange:
+        if dist(routerCoordinates, [self.coordinateY, self.coordinateZ, self.x]) < routerRange:
             self.inRouterRange = True
         else:
             self.inRouterRange = False
@@ -49,7 +51,7 @@ class NanoNode:
     def checkTransmission(self):
         if not self.commSuccess:
             if self.isSendingMessage:
-                if dist([self.x, self.coordinates[0], self.coordinates[1]], [26, 0, 2]) < 4: #temp - router coordinates & range
+                if dist([self.x, self.coordinateY, self.coordinateZ], [26, 0, 2]) < 4: #temp - router coordinates & range
                     self.transmissionTime -= 1
             if self.transmissionTime == 0:
                 self.commSuccess = True
@@ -57,8 +59,8 @@ class NanoNode:
 
     def printData(self):
         print("Printing info about node")
-        print("y: " + str(self.coordinates[0]))
-        print("z: " + str(self.coordinates[1]))
+        print("y: " + str(self.coordinateY))
+        print("z: " + str(self.coordinateZ))
         print("x: " + str(self.x))
         print("Distance from vein center: " + str(self.R))
         print("Offset: " + str(self.offset))

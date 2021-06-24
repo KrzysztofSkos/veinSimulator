@@ -35,10 +35,8 @@ def drawPlot(rad, ax, nodeList):
     ax.clear()
     ax.scatter(25, 0, rad)
     for node in nodeList:
-        ax.scatter(node.x, node.coordinates[0], node.coordinates[1])
-    #ax.scatter(nodeList[0].x, nodeList[0].coordinates[0], nodeList[0].coordinates[1], label='1')
-    #ax.scatter(nodeList[0].x, nodeList[1].coordinates[0], nodeList[1].coordinates[1], label='2')
-    plt.legend(loc='upper left')
+        ax.scatter(node.x, node.coordinateY, node.coordinateZ)
+    #plt.legend(loc='upper left')
 
     ax.text(26, 0, rad, "router")
 
