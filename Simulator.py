@@ -21,9 +21,9 @@ for i in range(nodeCount):
     #node.printData()
 
 # Rysowanie wykresu
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-Drawing.drawPlot(veinDiameter/2, ax, nodeList)
+#fig = plt.figure()
+#ax = fig.add_subplot(111, projection='3d')
+#Drawing.drawPlot(veinDiameter/2, ax, nodeList)
 
 
 # Logika programu
@@ -34,6 +34,10 @@ for x in np.arange(0, 50, 1):
         node.flowStep(x)
         node.printData()
         print("***************")
+
+    # Rysowanie wykresu
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
     Drawing.drawPlot(veinDiameter / 2, ax, nodeList)
     time.sleep(1)
 
