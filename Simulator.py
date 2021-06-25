@@ -11,12 +11,12 @@ from NanoNode import NanoNode
 import Drawing
 import numpy as np
 
-veinDiameter = 4
+veinDiameter = 4 # mm, max 10
 nodeCount = 10
 nodeList = []
 # Generowanie nano urządzeń
 for i in range(nodeCount):
-    node = NanoNode(veinDiameter, [25, 0, veinDiameter / 2], 10, 1)
+    node = NanoNode(veinDiameter, [25, 0, veinDiameter / 2], 10)
     nodeList.append(node)
     #node.printData()
 
@@ -27,7 +27,7 @@ for i in range(nodeCount):
 
 
 # Logika programu
-for x in np.arange(0, 50, 1):
+for x in np.arange(0, 50, 0.1):
     print("=================================")
     print("Printing nodes in step: " + str(x))
     for node in nodeList:
@@ -41,13 +41,3 @@ for x in np.arange(0, 50, 1):
     ax = fig.add_subplot(111, projection='3d')
     Drawing.drawPlot(veinDiameter / 2, ax, nodeList)
     time.sleep(1)
-
-
-
-"""
-for i in range(5, 10):
-    print(i)
-    Drawing.drawPlot(i, ax, nodeList)
-
-    time.sleep(1)
-"""

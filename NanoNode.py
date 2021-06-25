@@ -23,13 +23,15 @@ class NanoNode:
     offset = 0
     commSuccess = False
     transmissionTime = 10
+    velocity = 1
 
-    def __init__(self, d, routerCoordinates, offsetRange, routerRange):
+    def __init__(self, d, routerCoordinates, offsetRange):
         # d - vein diameter
         self.phi = uniform(0, 2*pi)
         self.R = uniform(0, d/2)
         self.coordinateY = self.R * cos(self.phi)
         self.coordinateZ = self.R * sin(self.phi)
+        self.velocity = -self.R*self.R + d*d/4 + 1 # 1 - bazowa prędkość przy ścianie żyły
         self.offset = randrange(offsetRange)
         self.commSuccess = False
         if self.offset == 0:
@@ -43,7 +45,7 @@ class NanoNode:
             self.inRouterRange = False
 
     def flowStep(self, x):
-        self.x = x
+        self.x += self.velocity * x
         if self.offset > 0:
             self.offset -= 1
         if self.offset <= 0:
