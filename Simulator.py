@@ -12,7 +12,7 @@ import Drawing
 import numpy as np
 
 veinDiameter = 4
-nodeCount = 2
+nodeCount = 10
 nodeList = []
 # Generowanie nano urządzeń
 for i in range(nodeCount):
@@ -36,6 +36,7 @@ for x in np.arange(0, 50, 1):
         print("***************")
 
     # Rysowanie wykresu
+    #plt.close('all')
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     Drawing.drawPlot(veinDiameter / 2, ax, nodeList)

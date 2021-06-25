@@ -8,7 +8,7 @@ Created on May 03 20:55:07 2021
 import random
 import math
 from random import uniform, randrange
-from math import dist
+from math import dist, cos, sin, pi
 
 
 class NanoNode:
@@ -17,6 +17,7 @@ class NanoNode:
     coordinateZ = 0
     x = 0.0
     R = 0.0  # distance from vein center
+    phi = 0.0 # angle
     inRouterRange = False
     isSendingMessage = True
     offset = 0
@@ -25,9 +26,10 @@ class NanoNode:
 
     def __init__(self, d, routerCoordinates, offsetRange, routerRange):
         # d - vein diameter
-        self.coordinateY = uniform(-d / 2, d / 2)
-        self.coordinateZ = uniform(-d / 2, d / 2)
-        self.R = dist([self.coordinateY, self.coordinateZ], [0, 0])
+        self.phi = uniform(0, 2*pi)
+        self.R = uniform(0, d/2)
+        self.coordinateY = self.R * cos(self.phi)
+        self.coordinateZ = self.R * sin(self.phi)
         self.offset = randrange(offsetRange)
         self.commSuccess = False
         if self.offset == 0:
@@ -35,7 +37,7 @@ class NanoNode:
         else:
             self.isSendingMessage = False
 
-        if dist(routerCoordinates, [self.coordinateY, self.coordinateZ, self.x]) < routerRange:
+        if dist(routerCoordinates, [self.coordinateY, self.coordinateZ, self.x]) < 2: #2 = zasięg rutera - stała
             self.inRouterRange = True
         else:
             self.inRouterRange = False
@@ -51,7 +53,7 @@ class NanoNode:
     def checkTransmission(self):
         if not self.commSuccess:
             if self.isSendingMessage:
-                if dist([self.x, self.coordinateY, self.coordinateZ], [26, 0, 2]) < 4: #temp - router coordinates & range
+                if dist([self.x, self.coordinateY, self.coordinateZ], [26, 0, 2]) < 2: #temp - router coordinates & range
                     self.transmissionTime -= 1
             if self.transmissionTime == 0:
                 self.commSuccess = True
