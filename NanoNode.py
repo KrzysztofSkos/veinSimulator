@@ -12,12 +12,11 @@ from math import dist, cos, sin, pi
 
 
 class NanoNode:
-    coordinates = [0, 0]  # y and z
     coordinateY = 0
     coordinateZ = 0
     x = 0.0
     R = 0.0  # distance from vein center
-    phi = 0.0 # angle
+    phi = 0.0  # angle
     inRouterRange = False
     isSendingMessage = True
     offset = 0
@@ -25,37 +24,43 @@ class NanoNode:
     transmissionTime = 10
     velocity = 1
 
-    def __init__(self, d, routerCoordinates, offsetRange):
+    def __init__(self, d, veinLength, routerCoordinates, offsetRange, v_sr=200):
         # d - vein diameter
-        self.phi = uniform(0, 2*pi)
-        self.R = uniform(0, d/2)
+        # l - simulated vein length
+        self.phi = uniform(0, 2 * pi)
+        self.R = uniform(0, d / 2)
+        self.x = uniform(0, veinLength)
         self.coordinateY = self.R * cos(self.phi)
         self.coordinateZ = self.R * sin(self.phi)
-        self.velocity = -self.R*self.R + d*d/4 + 1 # 1 - bazowa prędkość przy ścianie żyły
-        self.offset = randrange(offsetRange)
+        self.velocity = v_sr * 2 * ((d / 2) ** 2 - self.R ** 2) / ((d / 2) ** 2)
+        self.velocity = self.velocity / 10 ** 6  # Zmiana prędkości z mm/s na mm/us
+        #self.offset = randrange(offsetRange)
         self.commSuccess = False
         if self.offset == 0:
             self.isSendingMessage = True
         else:
             self.isSendingMessage = False
+        self.inRouterRange = self.checkRouterRange(routerCoordinates)
 
-        if dist(routerCoordinates, [self.coordinateY, self.coordinateZ, self.x]) < 2: #2 = zasięg rutera - stała
-            self.inRouterRange = True
+    def checkRouterRange(self, routerCoordinates):
+        if dist(routerCoordinates, [self.coordinateY, self.coordinateZ, self.x]) < 2:
+            return True
         else:
-            self.inRouterRange = False
+            return False
 
-    def flowStep(self, x):
-        self.x += self.velocity * x
-        if self.offset > 0:
-            self.offset -= 1
-        if self.offset <= 0:
-            self.isSendingMessage = True
-        self.checkTransmission()
+    def flowStep(self):
+        self.x += self.velocity
+        #if self.offset > 0:
+        #    self.offset -= 1
+        #if self.offset <= 0:
+        #    self.isSendingMessage = True
+        #self.checkTransmission()
 
     def checkTransmission(self):
         if not self.commSuccess:
             if self.isSendingMessage:
-                if dist([self.x, self.coordinateY, self.coordinateZ], [26, 0, 2]) < 2: #temp - router coordinates & range
+                if dist([self.x, self.coordinateY, self.coordinateZ],
+                        [26, 0, 2]) < 2:  # temp - router coordinates & range
                     self.transmissionTime -= 1
             if self.transmissionTime == 0:
                 self.commSuccess = True
@@ -72,5 +77,3 @@ class NanoNode:
         print("In router range? " + str(self.inRouterRange))
         print("Transmission time: " + str(self.transmissionTime))
         print("Communication succeded? " + str(self.commSuccess))
-
-

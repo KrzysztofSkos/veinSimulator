@@ -24,7 +24,7 @@ def data_for_cylinder_along_z(center_x, center_y, radius, height_z):
     return z_grid, y_grid, x_grid
 
 
-def drawPlot(rad, ax, nodeList):
+def drawPlot(rad, ax, nodeList, length):
     """
 
     :param rad: vein radius
@@ -33,14 +33,17 @@ def drawPlot(rad, ax, nodeList):
     :return:
     """
     ax.clear()
-    ax.scatter(25, 0, rad)
+    ax.scatter(length-2, 0, rad, marker="o")  # router
+    ax.text(length - 1.9, 0, rad, "router")
     for node in nodeList:
-        ax.scatter(node.x, node.coordinateY, node.coordinateZ)
+        if node.x <= length:
+            if node.inRouterRange:
+                ax.scatter(node.x, node.coordinateY, node.coordinateZ, marker="d", c="#00ff02")
+            else:
+                ax.scatter(node.x, node.coordinateY, node.coordinateZ, marker="d", c="Red")
     #plt.legend(loc='upper left')
 
-    ax.text(26, 0, rad, "router")
-
-    Xc, Yc, Zc = data_for_cylinder_along_z(0, 0, rad, 50)
+    Xc, Yc, Zc = data_for_cylinder_along_z(0, 0, rad, length)
     ax.plot_surface(Xc, Yc, Zc, alpha=0.5)
 
     ax.set_xlabel("X")
