@@ -5,61 +5,69 @@ Created on May 03 20:55:07 2021
 @author: krzysztof_skos
 """
 import math
-import time
 import matplotlib.pyplot as plt
 from NanoNode import NanoNode
 import Drawing
 import numpy as np
 
+drawPlot = False
+maxOffset = 0
 collisionCount = 0
+completedTransmissionCount = 0
 veinDiameter = 4  # mm, max 10
 veinLength = 6  # mm
-nodeTotal = 100  # total number of nodes
+nodeTotal = 500000  # total number of nodes
 nodeCount = math.floor(
-    math.pi * veinDiameter * veinDiameter * veinLength * nodeTotal / (22.4 * 10 ** 2))  # Simulated nodes
+    math.pi * veinDiameter**2 * veinLength * nodeTotal / (22.4 * 10**6))  # Simulated nodes
 
-for i in range(1000):
+for z in range(100):
     nodeList = []
-    sendingNodeListBeginning = []
-    sendingNodeListEnd = []
+    sendingNodeList = []
+    collision = False
 
     # Generowanie nano urządzeń
     for i in range(nodeCount):
         node = NanoNode(veinDiameter, veinLength, [0, veinDiameter / 2, veinLength - 2], 10)
         nodeList.append(node)
-        if node.inRouterRange:
-            sendingNodeListBeginning.append(node)
+        if node.offset > maxOffset:
+            maxOffset = node.offset
+        if node.inRouterRange and node.isSendingMessage:
+            sendingNodeList.append(node)
         # node.printData()
 
     # Sekcja sprawdzania kolizji
-    if len(sendingNodeListBeginning) > 1:
+    if len(sendingNodeList) > 1:
         collisionCount += 1
-        # break
-    """
-    # Rysowanie wykresu
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    Drawing.drawPlot(veinDiameter / 2, ax, nodeList, veinLength)
-    """
-    # Logika programu
-    for x in np.arange(0, 64, 1):  # Symulacja - krok 1 us
-        for node in nodeList:
-            node.flowStep()
-    """
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    Drawing.drawPlot(veinDiameter / 2, ax, nodeList, veinLength)
-    """
-    for node in nodeList:
-        if node.inRouterRange:
-            sendingNodeListEnd.append(node)
+        collision = True
+        continue
 
-    if len(sendingNodeListBeginning) != len(sendingNodeListEnd):
-        collisionCount += 1
-        # break
-    else:
-        for node in sendingNodeListBeginning:
-            if node not in sendingNodeListEnd:
-                collisionCount += 1
-                break
-print(collisionCount)
+    if drawPlot:
+        # Rysowanie wykresu
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)  # Dlaczego promień+1?
+
+    # Logika programu
+    for x in np.arange(0, 64+maxOffset, 1):  # Symulacja - krok 1 us
+        sendingNodeList = []
+        for node in nodeList:
+            if node.inRouterRange and node.isSendingMessage:
+                sendingNodeList.append(node)
+            node.flowStep()
+        if len(sendingNodeList) > 1:
+            collisionCount += 1
+            collision = True
+            break
+
+    if not collision:
+        for node in nodeList:
+            if node.commSuccess:
+                completedTransmissionCount += 1
+
+    if drawPlot:
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)
+
+print("Collision count: ", collisionCount)
+print("Completed transmissions: ", completedTransmissionCount)

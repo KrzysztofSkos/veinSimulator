@@ -19,10 +19,11 @@ class NanoNode:
     phi = 0.0  # angle
     inRouterRange = False
     isSendingMessage = True
-    offset = 0
+    offset = 0  # us
     commSuccess = False
-    transmissionTime = 10
+    transmissionTime = 64
     velocity = 1
+    routerCoordinates = []
 
     def __init__(self, d, veinLength, routerCoordinates, offsetRange, v_sr=200):
         # d - vein diameter
@@ -34,12 +35,13 @@ class NanoNode:
         self.coordinateZ = self.R * sin(self.phi)
         self.velocity = v_sr * 2 * ((d / 2) ** 2 - self.R ** 2) / ((d / 2) ** 2)
         self.velocity = self.velocity / 10 ** 6  # Zmiana prędkości z mm/s na mm/us
-        #self.offset = randrange(offsetRange)
+        self.offset = randrange(offsetRange)
         self.commSuccess = False
         if self.offset == 0:
             self.isSendingMessage = True
         else:
             self.isSendingMessage = False
+        self.routerCoordinates = routerCoordinates
         self.inRouterRange = self.checkRouterRange(routerCoordinates)
 
     def checkRouterRange(self, routerCoordinates):
@@ -50,11 +52,17 @@ class NanoNode:
 
     def flowStep(self):
         self.x += self.velocity
-        #if self.offset > 0:
-        #    self.offset -= 1
-        #if self.offset <= 0:
-        #    self.isSendingMessage = True
-        #self.checkTransmission()
+        if self.transmissionTime >= 0:
+            if self.offset > 0:
+                self.offset -= 1
+            if self.offset <= 0:
+                self.isSendingMessage = True
+                self.transmissionTime -= 1
+            self.inRouterRange = self.checkRouterRange(self.routerCoordinates)
+            if self.transmissionTime == 0 and self.inRouterRange:
+                self.commSuccess = True
+        else:
+            self.isSendingMessage = False
 
     def checkTransmission(self):
         if not self.commSuccess:
@@ -77,3 +85,4 @@ class NanoNode:
         print("In router range? " + str(self.inRouterRange))
         print("Transmission time: " + str(self.transmissionTime))
         print("Communication succeded? " + str(self.commSuccess))
+        print("================================")

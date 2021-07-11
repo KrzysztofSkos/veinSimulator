@@ -27,6 +27,7 @@ def data_for_cylinder_along_z(center_x, center_y, radius, height_z):
 def drawPlot(rad, ax, nodeList, length):
     """
 
+    :param length:
     :param rad: vein radius
     :param ax:
     :param nodeList:
@@ -38,9 +39,15 @@ def drawPlot(rad, ax, nodeList, length):
     for node in nodeList:
         if node.x <= length:
             if node.inRouterRange:
-                ax.scatter(node.x, node.coordinateY, node.coordinateZ, marker="d", c="#00ff02")
+                if node.isSendingMessage:
+                    ax.scatter(node.x, node.coordinateY, node.coordinateZ, marker="d", c="#00ff02")
+                else:
+                    ax.scatter(node.x, node.coordinateY, node.coordinateZ, marker="x", c="#00ff02")
             else:
-                ax.scatter(node.x, node.coordinateY, node.coordinateZ, marker="d", c="Red")
+                if node.isSendingMessage:
+                    ax.scatter(node.x, node.coordinateY, node.coordinateZ, marker="d", c="Red")
+                else:
+                    ax.scatter(node.x, node.coordinateY, node.coordinateZ, marker="x", c="Red")
     #plt.legend(loc='upper left')
 
     Xc, Yc, Zc = data_for_cylinder_along_z(0, 0, rad, length)
