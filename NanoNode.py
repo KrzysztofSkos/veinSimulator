@@ -24,10 +24,13 @@ class NanoNode:
     transmissionTime = 64
     velocity = 1
     routerCoordinates = []
+    collision = False
+    id = 0
 
-    def __init__(self, d, veinLength, routerCoordinates, offsetRange, v_sr=200):
+    def __init__(self, d, veinLength, routerCoordinates, offsetRange, id, v_sr=200):
         # d - vein diameter
         # l - simulated vein length
+        self.id = id
         self.phi = uniform(0, 2 * pi)
         self.R = uniform(0, d / 2)
         self.x = uniform(0, veinLength)
@@ -52,7 +55,7 @@ class NanoNode:
 
     def flowStep(self):
         self.x += self.velocity
-        if self.transmissionTime >= 0:
+        if self.transmissionTime >= 0 and not self.collision:
             if self.offset > 0:
                 self.offset -= 1
             if self.offset <= 0:
@@ -63,6 +66,9 @@ class NanoNode:
                 self.commSuccess = True
         else:
             self.isSendingMessage = False
+
+    def setCollision(self, collision):
+        self.collision = collision
 
     def checkTransmission(self):
         if not self.commSuccess:

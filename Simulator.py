@@ -10,9 +10,10 @@ from NanoNode import NanoNode
 import Drawing
 import numpy as np
 
-drawPlot = False
+drawPlot = True
 maxOffset = 0
 collisionCount = 0
+brokenFrames = 0
 completedTransmissionCount = 0
 veinDiameter = 4  # mm, max 10
 veinLength = 6  # mm
@@ -20,26 +21,29 @@ nodeTotal = 500000  # total number of nodes
 nodeCount = math.floor(
     math.pi * veinDiameter**2 * veinLength * nodeTotal / (22.4 * 10**6))  # Simulated nodes
 
-for z in range(100):
+print("Nodes during observation: ", nodeCount)
+
+for z in range(1):
     nodeList = []
     sendingNodeList = []
     collision = False
 
     # Generowanie nano urządzeń
     for i in range(nodeCount):
-        node = NanoNode(veinDiameter, veinLength, [0, veinDiameter / 2, veinLength - 2], 10)
+        node = NanoNode(veinDiameter, veinLength, [0, veinDiameter / 2, veinLength - 2], 10, i)
         nodeList.append(node)
         if node.offset > maxOffset:
             maxOffset = node.offset
         if node.inRouterRange and node.isSendingMessage:
             sendingNodeList.append(node)
-        # node.printData()
 
     # Sekcja sprawdzania kolizji
     if len(sendingNodeList) > 1:
-        collisionCount += 1
-        collision = True
-        continue
+        for node in sendingNodeList:
+            nodeList[node.id].setCollision(True)
+        # collisionCount += 1
+        # collision = True
+        # continue
 
     if drawPlot:
         # Rysowanie wykresu
@@ -53,11 +57,18 @@ for z in range(100):
         for node in nodeList:
             if node.inRouterRange and node.isSendingMessage:
                 sendingNodeList.append(node)
+
             node.flowStep()
         if len(sendingNodeList) > 1:
-            collisionCount += 1
-            collision = True
-            break
+            for nd in nodeList:
+                nodeList[nd.id].setCollision(True)
+        #    collisionCount += 1
+        #    collision = True
+        #    break
+
+    for node in nodeList:
+        if node.collision:
+            brokenFrames += 1
 
     if not collision:
         for node in nodeList:
@@ -69,5 +80,5 @@ for z in range(100):
         ax = fig.add_subplot(111, projection='3d')
         Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)
 
-print("Collision count: ", collisionCount)
+print("Broken frames due to collision: ", brokenFrames)
 print("Completed transmissions: ", completedTransmissionCount)
