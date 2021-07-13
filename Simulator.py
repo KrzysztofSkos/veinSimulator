@@ -10,7 +10,7 @@ from NanoNode import NanoNode
 import Drawing
 import numpy as np
 
-drawPlot = True
+drawPlot = False
 maxOffset = 0
 collisionCount = 0
 brokenFrames = 0
@@ -21,9 +21,9 @@ nodeTotal = 500000  # total number of nodes
 nodeCount = math.floor(
     math.pi * veinDiameter**2 * veinLength * nodeTotal / (22.4 * 10**6))  # Simulated nodes
 
-print("Nodes during observation: ", nodeCount)
+print("Nodes during each observation: ", nodeCount)
 
-for z in range(1):
+for z in range(100):
     nodeList = []
     sendingNodeList = []
     collision = False
@@ -60,7 +60,7 @@ for z in range(1):
 
             node.flowStep()
         if len(sendingNodeList) > 1:
-            for nd in nodeList:
+            for nd in sendingNodeList:
                 nodeList[nd.id].setCollision(True)
         #    collisionCount += 1
         #    collision = True
