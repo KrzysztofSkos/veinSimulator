@@ -11,74 +11,74 @@ import Drawing
 import numpy as np
 
 drawPlot = False
-maxOffset = 0
-collisionCount = 0
-brokenFrames = 0
-completedTransmissionCount = 0
+simulationQuantity = 100
 veinDiameter = 4  # mm, max 10
 veinLength = 6  # mm
 nodeTotal = 500000  # total number of nodes
+latencyVariation = 10  # us, 0 for synchronous network
+
+# Event counters and setting variables
+maxOffset = 0  # max latency generated for simulation in us
+brokenFrames = 0  # counter for frames broken due to collision
+completedTransmissionCount = 0  # counter for completed transmissions
 nodeCount = math.floor(
-    math.pi * veinDiameter**2 * veinLength * nodeTotal / (22.4 * 10**6))  # Simulated nodes
+    math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))  # Simulated nodes
 
-print("Nodes during each observation: ", nodeCount)
-
-for z in range(100):
+for z in range(simulationQuantity):
     nodeList = []
     sendingNodeList = []
     collision = False
 
-    # Generowanie nano urządzeń
+    # Generating nano nodes and maxOffset
     for i in range(nodeCount):
-        node = NanoNode(veinDiameter, veinLength, [0, veinDiameter / 2, veinLength - 2], 10, i)
+        node = NanoNode(veinDiameter, veinLength, [0, veinDiameter / 2, veinLength - 2], latencyVariation + 1, i)
         nodeList.append(node)
         if node.offset > maxOffset:
             maxOffset = node.offset
         if node.inRouterRange and node.isSendingMessage:
             sendingNodeList.append(node)
 
-    # Sekcja sprawdzania kolizji
+    # Checking for collisions
     if len(sendingNodeList) > 1:
         for node in sendingNodeList:
             nodeList[node.id].setCollision(True)
-        # collisionCount += 1
-        # collision = True
-        # continue
 
+    # Drawing start plot
     if drawPlot:
-        # Rysowanie wykresu
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
         Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)  # Dlaczego promień+1?
 
-    # Logika programu
-    for x in np.arange(0, 64+maxOffset, 1):  # Symulacja - krok 1 us
+    # Simulation - 1 us step
+    for x in np.arange(0, 64 + maxOffset, 1):
         sendingNodeList = []
         for node in nodeList:
             if node.inRouterRange and node.isSendingMessage:
                 sendingNodeList.append(node)
-
             node.flowStep()
+        # Checking for collision each step
         if len(sendingNodeList) > 1:
             for nd in sendingNodeList:
                 nodeList[nd.id].setCollision(True)
-        #    collisionCount += 1
-        #    collision = True
-        #    break
 
+    # Counting broken frames
     for node in nodeList:
         if node.collision:
             brokenFrames += 1
 
+    # Counting completed transmissions
     if not collision:
         for node in nodeList:
             if node.commSuccess:
                 completedTransmissionCount += 1
 
+    # Drawing end plot
     if drawPlot:
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
         Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)
 
+# Printing in console info obout simulations
+print("Nodes during each observation: ", nodeCount)
 print("Broken frames due to collision: ", brokenFrames)
 print("Completed transmissions: ", completedTransmissionCount)

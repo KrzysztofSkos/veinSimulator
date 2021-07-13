@@ -7,15 +7,17 @@ Created on May 11 22:42:06 2021
 
 import matplotlib.pyplot as plt
 import numpy as np
-import NanoNode
-from mpl_toolkits.mplot3d import Axes3D
-
-
-def __init__():
-    fig = plt.figure()
 
 
 def data_for_cylinder_along_z(center_x, center_y, radius, height_z):
+    """
+    Method for creating grid for cylinder drawing. Cylinder will be created along Z axis.
+    :param center_x: Euclidean 3 dimentional center of drawing on X axis
+    :param center_y: Euclidean 3 dimentional center of drawing on Y axis
+    :param radius: cylinder radious
+    :param height_z: cylinder height
+    :return: Three lists with grid coordinates for z, y, x sequentially
+    """
     z = np.linspace(0, height_z, 50)
     theta = np.linspace(0, 2 * np.pi, 50)
     theta_grid, z_grid = np.meshgrid(theta, z)
@@ -26,11 +28,11 @@ def data_for_cylinder_along_z(center_x, center_y, radius, height_z):
 
 def drawPlot(rad, ax, nodeList, length):
     """
-
-    :param length:
+    Method for drawing plot during symulation
     :param rad: vein radius
-    :param ax:
-    :param nodeList:
+    :param ax: instance of figure() with subplot
+    :param nodeList: list of nodes to draw
+    :param length: cylinder length
     :return:
     """
     ax.clear()
@@ -48,10 +50,9 @@ def drawPlot(rad, ax, nodeList, length):
                     ax.scatter(node.x, node.coordinateY, node.coordinateZ, marker="d", c="Red")
                 else:
                     ax.scatter(node.x, node.coordinateY, node.coordinateZ, marker="x", c="Red")
-    #plt.legend(loc='upper left')
 
-    Xc, Yc, Zc = data_for_cylinder_along_z(0, 0, rad, length)
-    ax.plot_surface(Xc, Yc, Zc, alpha=0.5)
+    xc, yc, zc = data_for_cylinder_along_z(0, 0, rad, length)
+    ax.plot_surface(xc, yc, zc, alpha=0.5)
 
     ax.set_xlabel("X")
     ax.set_ylabel("Y")
