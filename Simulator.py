@@ -9,7 +9,9 @@ import matplotlib.pyplot as plt
 from NanoNode import NanoNode
 import Drawing
 import numpy as np
+import xlsxwriter
 
+transmissionTime = 128
 drawPlot = False
 simulationQuantity = 100
 veinDiameter = 4  # mm, max 10
@@ -24,61 +26,82 @@ completedTransmissionCount = 0  # counter for completed transmissions
 nodeCount = math.floor(
     math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))  # Simulated nodes
 
-for z in range(simulationQuantity):
-    nodeList = []
-    sendingNodeList = []
-    collision = False
+workbook = xlsxwriter.Workbook('nodeCountTT128.xlsx')
+worksheet = workbook.add_worksheet()
+worksheet.write(0, 0, "Nodes total")
+worksheet.write(0, 1, "Nodes during each observation")
+worksheet.write(0, 2, "Broken frames due to collision")
+worksheet.write(0, 3, "Completed transmissions")
+rowCounter = 0
 
-    # Generating nano nodes and maxOffset
-    for i in range(nodeCount):
-        node = NanoNode(veinDiameter, veinLength, [0, veinDiameter / 2, veinLength - 2], latencyVariation + 1, i)
-        nodeList.append(node)
-        if node.offset > maxOffset:
-            maxOffset = node.offset
-        if node.inRouterRange and node.isSendingMessage:
-            sendingNodeList.append(node)
-
-    # Checking for collisions
-    if len(sendingNodeList) > 1:
-        for node in sendingNodeList:
-            nodeList[node.id].setCollision(True)
-
-    # Drawing start plot
-    if drawPlot:
-        fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
-        Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)  # Dlaczego promień+1?
-
-    # Simulation - 1 us step
-    for x in np.arange(0, 64 + maxOffset, 1):
+for nt in range(100000, 450000, 100):
+    rowCounter += 1
+    nodeTotal = nt
+    nodeCount = math.floor(
+        math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))  # Simulated nodes
+    for z in range(simulationQuantity):
+        nodeList = []
         sendingNodeList = []
-        for node in nodeList:
+        collision = False
+
+        # Generating nano nodes and maxOffset
+        for i in range(nodeCount):
+            node = NanoNode(veinDiameter, veinLength, [0, veinDiameter / 2, veinLength - 2], latencyVariation + 1, i,
+                            transmissionTime)
+            nodeList.append(node)
+            if node.offset > maxOffset:
+                maxOffset = node.offset
             if node.inRouterRange and node.isSendingMessage:
                 sendingNodeList.append(node)
-            node.flowStep()
-        # Checking for collision each step
+
+        # Checking for collisions
         if len(sendingNodeList) > 1:
-            for nd in sendingNodeList:
-                nodeList[nd.id].setCollision(True)
+            for node in sendingNodeList:
+                nodeList[node.id].setCollision(True)
 
-    # Counting broken frames
-    for node in nodeList:
-        if node.collision:
-            brokenFrames += 1
+        # Drawing start plot
+        if drawPlot:
+            fig = plt.figure()
+            ax = fig.add_subplot(111, projection='3d')
+            Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)  # Dlaczego promień+1?
 
-    # Counting completed transmissions
-    if not collision:
+        # Simulation - 1 us step
+        for x in np.arange(0, transmissionTime + maxOffset, 1):
+            sendingNodeList = []
+            for node in nodeList:
+                if node.inRouterRange and node.isSendingMessage:
+                    sendingNodeList.append(node)
+                node.flowStep()
+            # Checking for collision each step
+            if len(sendingNodeList) > 1:
+                for nd in sendingNodeList:
+                    nodeList[nd.id].setCollision(True)
+
+        # Counting broken frames
         for node in nodeList:
-            if node.commSuccess:
-                completedTransmissionCount += 1
+            if node.collision:
+                brokenFrames += 1
 
-    # Drawing end plot
-    if drawPlot:
-        fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
-        Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)
+        # Counting completed transmissions
+        if not collision:
+            for node in nodeList:
+                if node.commSuccess:
+                    completedTransmissionCount += 1
 
-# Printing in console info obout simulations
-print("Nodes during each observation: ", nodeCount)
-print("Broken frames due to collision: ", brokenFrames)
-print("Completed transmissions: ", completedTransmissionCount)
+        # Drawing end plot
+        if drawPlot:
+            fig = plt.figure()
+            ax = fig.add_subplot(111, projection='3d')
+            Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)
+
+    # Printing in console info obout simulations
+    # print("Nodes total: ", nt)
+    # print("Nodes during each observation: ", nodeCount)
+    # print("Broken frames due to collision: ", brokenFrames)
+    # print("Completed transmissions: ", completedTransmissionCount)
+    worksheet.write(rowCounter, 0, nt)
+    worksheet.write(rowCounter, 1, nodeCount)
+    worksheet.write(rowCounter, 2, brokenFrames)
+    worksheet.write(rowCounter, 3, completedTransmissionCount)
+
+workbook.close()

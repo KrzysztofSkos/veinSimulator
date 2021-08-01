@@ -19,13 +19,12 @@ class NanoNode:
     isSendingMessage = True
     offset = 1  # us
     commSuccess = False
-    transmissionTime = 64
     velocity = 1
     routerCoordinates = []
     collision = False
     id = 0
 
-    def __init__(self, d, veinLength, routerCoordinates, offsetRange, id, v_sr=200):
+    def __init__(self, d, veinLength, routerCoordinates, offsetRange, iD, transmissionTime=64, v_sr=200):
         """
         Class constructor
         :param d: simulated vein diameter
@@ -35,7 +34,8 @@ class NanoNode:
         :param id: node id
         :param v_sr: mean velocity of node in vein in mm/s
         """
-        self.id = id
+        self.transmissionTime = transmissionTime
+        self.id = iD
         self.phi = uniform(0, 2 * pi)
         self.R = uniform(0, d / 2)
         self.x = uniform(0, veinLength)
