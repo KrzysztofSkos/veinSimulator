@@ -5,19 +5,21 @@ Created on May 03 20:55:07 2021
 @author: krzysztof_skos
 """
 import math
+import time
+
 import matplotlib.pyplot as plt
 from NanoNode import NanoNode
 import Drawing
 import numpy as np
 import xlsxwriter
 
-transmissionTime = 128
+transmissionTime = 64
 drawPlot = False
 simulationQuantity = 100
 veinDiameter = 4  # mm, max 10
 veinLength = 6  # mm
 nodeTotal = 500000  # total number of nodes
-latencyVariation = 10  # us, 0 for synchronous network
+latencyVariation = 0  # us, 0 for synchronous network
 
 # Event counters and setting variables
 maxOffset = 0  # max latency generated for simulation in us
@@ -26,7 +28,7 @@ completedTransmissionCount = 0  # counter for completed transmissions
 nodeCount = math.floor(
     math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))  # Simulated nodes
 
-workbook = xlsxwriter.Workbook('nodeCountTT128.xlsx')
+workbook = xlsxwriter.Workbook('nodeCountTT64.xlsx')
 worksheet = workbook.add_worksheet()
 worksheet.write(0, 0, "Nodes total")
 worksheet.write(0, 1, "Nodes during each observation")
@@ -34,12 +36,18 @@ worksheet.write(0, 2, "Broken frames due to collision")
 worksheet.write(0, 3, "Completed transmissions")
 rowCounter = 0
 
-for nt in range(100000, 450000, 100):
+t = time.time()
+
+for nt in range(100000, 2000000, 100):
     rowCounter += 1
     nodeTotal = nt
     nodeCount = math.floor(
         math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))  # Simulated nodes
+    brokenFrames = 0
+    completedTransmissionCount = 0
+
     for z in range(simulationQuantity):
+        maxOffset = 0
         nodeList = []
         sendingNodeList = []
         collision = False
@@ -104,4 +112,5 @@ for nt in range(100000, 450000, 100):
     worksheet.write(rowCounter, 2, brokenFrames)
     worksheet.write(rowCounter, 3, completedTransmissionCount)
 
+print(time.time() - t)
 workbook.close()
