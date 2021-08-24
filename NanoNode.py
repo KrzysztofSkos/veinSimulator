@@ -58,7 +58,8 @@ class NanoNode:
         :param routerCoordinates: list with 3 dimentional Euclidean coordinates
         :return: True if node is in router range, False otherwise
         """
-        if dist(routerCoordinates, [self.coordinateY, self.coordinateZ, self.x]) < 2:
+        if routerCoordinates[2] - 2 <= self.x <= routerCoordinates[2] + 2:
+        #if dist(routerCoordinates, [self.coordinateY, self.coordinateZ, self.x]) < 2:
             return True
         else:
             return False

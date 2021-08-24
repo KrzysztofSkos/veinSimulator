@@ -6,12 +6,13 @@ Created on May 03 20:55:07 2021
 """
 import math
 import time
-
+from datetime import datetime
 import matplotlib.pyplot as plt
 from NanoNode import NanoNode
 import Drawing
 import numpy as np
 import xlsxwriter
+
 
 transmissionTime = 64
 drawPlot = False
@@ -28,7 +29,7 @@ completedTransmissionCount = 0  # counter for completed transmissions
 nodeCount = math.floor(
     math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))  # Simulated nodes
 
-workbook = xlsxwriter.Workbook('nodeCountTT64.xlsx')
+workbook = xlsxwriter.Workbook('nodeCountTT64_simplified.xlsx')
 worksheet = workbook.add_worksheet()
 worksheet.write(0, 0, "Nodes total")
 worksheet.write(0, 1, "Nodes during each observation")
@@ -37,6 +38,7 @@ worksheet.write(0, 3, "Completed transmissions")
 rowCounter = 0
 
 t = time.time()
+print(datetime.now().time())
 
 for nt in range(100000, 2000000, 100):
     rowCounter += 1
