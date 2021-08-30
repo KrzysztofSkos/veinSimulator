@@ -12,6 +12,7 @@ from NanoNode import NanoNode
 import Drawing
 import numpy as np
 import xlsxwriter
+from random import randrange
 
 
 transmissionTime = 64
@@ -29,7 +30,7 @@ completedTransmissionCount = 0  # counter for completed transmissions
 nodeCount = math.floor(
     math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))  # Simulated nodes
 
-workbook = xlsxwriter.Workbook('nodeCountTT64_simplified.xlsx')
+workbook = xlsxwriter.Workbook('nodeCountTT64_simp1_plusminus.xlsx')
 worksheet = workbook.add_worksheet()
 worksheet.write(0, 0, "Nodes total")
 worksheet.write(0, 1, "Nodes during each observation")
@@ -43,8 +44,19 @@ print(datetime.now().time())
 for nt in range(100000, 2000000, 100):
     rowCounter += 1
     nodeTotal = nt
+    tmp = randrange(0, 4, 1)
+    #if tmp == 1:
+    #    nodeCount = math.ceil(
+    #        math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))  # Simulated nodes
+    #else:
+    #    nodeCount = math.floor(
+    #        math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))
     nodeCount = math.floor(
-        math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))  # Simulated nodes
+                math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))
+    if tmp == 0:
+        nodeCount += 1
+    elif tmp == 1:
+        nodeCount -= 1
     brokenFrames = 0
     completedTransmissionCount = 0
 
