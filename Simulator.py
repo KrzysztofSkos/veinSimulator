@@ -7,19 +7,15 @@ Created on May 03 20:55:07 2021
 import math
 import time
 from datetime import datetime
-import matplotlib.pyplot as plt
 from NanoNode import NanoNode
-import Drawing
 import numpy as np
 import csv
-from random import randrange
-
 
 transmissionTime = 64
-drawPlot = False
-simulationQuantity = 100
-veinDiameter = 4  # mm, max 10
+simulationQuantity = 60
 veinLength = 6  # mm
+veinDiameter = math.sqrt(2.8 * 10**5 / (3 * math.pi * veinLength))  # mm, max 10
+print("Diameter: ", veinDiameter)
 nodeTotal = 500000  # total number of nodes
 latencyVariation = 0  # us, 0 for synchronous network
 
@@ -30,30 +26,18 @@ completedTransmissionCount = 0  # counter for completed transmissions
 nodeCount = math.floor(
     math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))  # Simulated nodes
 
-f = open('nodeCountTT64_simp1_gauss1000_2.csv', 'w')
+f = open('nodeCountTT64_simp05_2.csv', 'w')
 writer = csv.writer(f)
 writer.writerow(["Nodes total", "Nodes during each observation", "Broken frames due to collision", "Completed "
                                                                                                    "transmissions"])
 
 t = time.time()
 print(datetime.now().time())
+data = []
 
 for nt in range(100000, 2000000, 100):
-    rowCounter += 1
     nodeTotal = nt
-    tmp = randrange(0, 4, 1)
-    #if tmp == 1:
-    #    nodeCount = math.ceil(
-    #        math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))  # Simulated nodes
-    #else:
-    #    nodeCount = math.floor(
-    #        math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))
-    nodeCount = math.floor(
-                math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))
-    if tmp == 0:
-        nodeCount += 1
-    elif tmp == 1:
-        nodeCount -= 1
+    nodeCount = round(math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))
     brokenFrames = 0
     completedTransmissionCount = 0
 
@@ -78,12 +62,6 @@ for nt in range(100000, 2000000, 100):
             for node in sendingNodeList:
                 nodeList[node.id].setCollision(True)
 
-        # Drawing start plot
-        if drawPlot:
-            fig = plt.figure()
-            ax = fig.add_subplot(111, projection='3d')
-            Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)  # Dlaczego promień+1?
-
         # Simulation - 1 us step
         for x in np.arange(0, transmissionTime + maxOffset, 1):
             sendingNodeList = []
@@ -107,11 +85,7 @@ for nt in range(100000, 2000000, 100):
                 if node.commSuccess:
                     completedTransmissionCount += 1
 
-        # Drawing end plot
-        if drawPlot:
-            fig = plt.figure()
-            ax = fig.add_subplot(111, projection='3d')
-            Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)
-
-    writer.writerow([nt, nodeCount, brokenFrames, completedTransmissionCount])
+    data.append([nt, nodeCount, brokenFrames, completedTransmissionCount])
+    #writer.writerow([nt, nodeCount, brokenFrames, completedTransmissionCount])
+writer.writerows(data)
 print(time.time() - t)
