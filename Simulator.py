@@ -14,7 +14,8 @@ import csv
 transmissionTime = 64
 simulationQuantity = 60
 veinLength = 6  # mm
-veinDiameter = math.sqrt(2.8 * 10**5 / (3 * math.pi * veinLength))  # mm, max 10
+#veinDiameter = math.sqrt(2.8 * 10**5 / (3 * math.pi * veinLength))  # mm, max 10
+veinDiameter = math.sqrt(1.4 * 10**4 / (9 * math.pi * veinLength))
 print("Diameter: ", veinDiameter)
 nodeTotal = 500000  # total number of nodes
 latencyVariation = 0  # us, 0 for synchronous network
@@ -85,7 +86,7 @@ for nt in range(100000, 2000000, 100):
                 if node.commSuccess:
                     completedTransmissionCount += 1
 
-    data.append([nt, nodeCount, brokenFrames, completedTransmissionCount])
-    #writer.writerow([nt, nodeCount, brokenFrames, completedTransmissionCount])
-writer.writerows(data)
+    #data.append([nt, nodeCount, brokenFrames, completedTransmissionCount])
+    writer.writerow([nt, nodeCount, brokenFrames, completedTransmissionCount])
+#writer.writerows(data)
 print(time.time() - t)
