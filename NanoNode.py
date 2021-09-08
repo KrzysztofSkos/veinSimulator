@@ -24,14 +24,15 @@ class NanoNode:
     collision = False
     id = 0
 
-    def __init__(self, d, veinLength, routerCoordinates, offsetRange, iD, transmissionTime=64, v_sr=200):
+    def __init__(self, d, veinLength, routerCoordinates, offsetRange, iD, transmissionTime=64, v_sr=240):
         """
         Class constructor
         :param d: simulated vein diameter
         :param veinLength: simulated vein length
-        :param routerCoordinates: list with 3 dimentional Euclidean coordinates
+        :param routerCoordinates: list with 3 dimensional Euclidean coordinates
         :param offsetRange: max latency variation in us
-        :param id: node id
+        :param iD: node id
+        :param transmissionTime: frame length
         :param v_sr: mean velocity of node in vein in mm/s
         """
         self.transmissionTime = transmissionTime
@@ -41,7 +42,7 @@ class NanoNode:
         self.x = uniform(0, veinLength)
         self.coordinateY = self.R * cos(self.phi)
         self.coordinateZ = self.R * sin(self.phi)
-        self.velocity = v_sr * 2 * ((d / 2) ** 2 - self.R ** 2) / ((d / 2) ** 2)
+        self.velocity = v_sr  # v_sr * 2 * ((d / 2) ** 2 - self.R ** 2) / ((d / 2) ** 2)
         self.velocity = self.velocity / 10 ** 6  # Zmiana prędkości z mm/s na mm/us
         self.offset = randrange(offsetRange)
         self.commSuccess = False
@@ -55,11 +56,11 @@ class NanoNode:
     def checkRouterRange(self, routerCoordinates):
         """
         Method for checking if node is in router range
-        :param routerCoordinates: list with 3 dimentional Euclidean coordinates
+        :param routerCoordinates: list with 3 dimensional Euclidean coordinates
         :return: True if node is in router range, False otherwise
         """
-        if routerCoordinates[2] - 0.5 <= self.x <= routerCoordinates[2] + 1:
-        #if dist(routerCoordinates, [self.coordinateY, self.coordinateZ, self.x]) < 2:
+        if routerCoordinates[2] - 0.5 <= self.x <= routerCoordinates[2] + 0.5:
+            # if dist(routerCoordinates, [self.coordinateY, self.coordinateZ, self.x]) < 2:
             return True
         else:
             return False
