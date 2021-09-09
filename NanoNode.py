@@ -17,7 +17,7 @@ class NanoNode:
     phi = 0.0  # angle
     inRouterRange = False
     isSendingMessage = True
-    offset = 1  # us
+    offset = 0  # us
     commSuccess = False
     velocity = 1
     routerCoordinates = []
@@ -44,7 +44,7 @@ class NanoNode:
         self.coordinateZ = self.R * sin(self.phi)
         self.velocity = v_sr  # v_sr * 2 * ((d / 2) ** 2 - self.R ** 2) / ((d / 2) ** 2)
         self.velocity = self.velocity / 10 ** 6  # Zmiana prędkości z mm/s na mm/us
-        self.offset = randrange(offsetRange)
+        # self.offset = randrange(offsetRange)
         self.commSuccess = False
         if self.offset == 0:
             self.isSendingMessage = True
