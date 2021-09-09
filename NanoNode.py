@@ -42,9 +42,9 @@ class NanoNode:
         self.x = uniform(0, veinLength)
         self.coordinateY = self.R * cos(self.phi)
         self.coordinateZ = self.R * sin(self.phi)
-        self.velocity = v_sr  # v_sr * 2 * ((d / 2) ** 2 - self.R ** 2) / ((d / 2) ** 2)
+        self.velocity = v_sr * 2 * ((d / 2) ** 2 - self.R ** 2) / ((d / 2) ** 2)
         self.velocity = self.velocity / 10 ** 6  # Zmiana prędkości z mm/s na mm/us
-        # self.offset = randrange(offsetRange)
+        self.offset = randrange(offsetRange)
         self.commSuccess = False
         if self.offset == 0:
             self.isSendingMessage = True
