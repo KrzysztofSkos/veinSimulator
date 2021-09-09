@@ -14,7 +14,6 @@ import csv
 transmissionTime = 64
 simulationQuantity = 60
 veinLength = 6  # mm
-#veinDiameter = math.sqrt(2.8 * 10**5 / (3 * math.pi * veinLength))  # mm, max 10
 veinDiameter = math.sqrt(1.4 * 10**4 / (9 * math.pi * veinLength))
 print("Diameter: ", veinDiameter)
 nodeTotal = 500000  # total number of nodes
@@ -27,7 +26,7 @@ completedTransmissionCount = 0  # counter for completed transmissions
 nodeCount = math.floor(
     math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))  # Simulated nodes
 
-f = open('nodeCountTT64_simp05_off0_1.csv', 'w')
+f = open('nodeCountTT64_simp05_gauss2.csv', 'w')
 writer = csv.writer(f)
 writer.writerow(["Nodes total", "Nodes during each observation", "Broken frames due to collision", "Completed "
                                                                                                    "transmissions"])
@@ -38,11 +37,14 @@ data = []
 
 for nt in range(1000, 2000000, 1000):
     nodeTotal = nt
-    nodeCount = round(math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))
+    nodeCountBase = math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6)
+    nodeCountList = []
     brokenFrames = 0
     completedTransmissionCount = 0
 
     for z in range(simulationQuantity):
+        nodeCount = round(nodeCountBase + np.random.normal(0, 0.3, 1)[0])
+        nodeCountList.append(nodeCount)
         maxOffset = 0
         nodeList = []
         sendingNodeList = []
@@ -88,6 +90,6 @@ for nt in range(1000, 2000000, 1000):
                     completedTransmissionCount += 1
 
     #data.append([nt, nodeCount, brokenFrames, completedTransmissionCount])
-    writer.writerow([nt, nodeCount, brokenFrames, completedTransmissionCount])
+    writer.writerow([nt, np.mean(nodeCountList), brokenFrames, completedTransmissionCount])
 #writer.writerows(data)
 print(time.time() - t)
