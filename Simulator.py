@@ -27,7 +27,7 @@ completedTransmissionCount = 0  # counter for completed transmissions
 nodeCount = math.floor(
     math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))  # Simulated nodes
 
-f = open('nodeCountTT64_simp05_baza.csv', 'w')
+f = open('nodeCountTT64_simp05_off0.csv', 'w')
 writer = csv.writer(f)
 writer.writerow(["Nodes total", "Nodes during each observation", "Broken frames due to collision", "Completed "
                                                                                                    "transmissions"])
@@ -36,7 +36,7 @@ t = time.time()
 print(datetime.now().time())
 data = []
 
-for nt in range(100, 2000000, 100):
+for nt in range(1000, 2000000, 1000):
     nodeTotal = nt
     nodeCount = round(math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))
     brokenFrames = 0
