@@ -15,7 +15,7 @@ transmissionTime = 64
 simulationQuantity = 60
 veinLength = 6  # mm
 bloodVolume = 5*10**6
-veinDiameter = math.sqrt(bloodVolume / (250 * 60 * math.pi * 1))
+veinDiameter = 2 * math.sqrt(bloodVolume / (250 * 60 * math.pi * 1))
 print("Diameter: ", veinDiameter)
 nodeTotal = 500000  # total number of nodes
 latencyVariation = 0  # us, 0 for synchronous network
