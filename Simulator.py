@@ -14,7 +14,8 @@ import csv
 transmissionTime = 64
 simulationQuantity = 60
 veinLength = 6  # mm
-veinDiameter = math.sqrt(1.4 * 10**4 / (9 * math.pi * veinLength))
+bloodVolume = 5*10**6
+veinDiameter = math.sqrt(bloodVolume / (250 * 60 * math.pi * 1))
 print("Diameter: ", veinDiameter)
 nodeTotal = 500000  # total number of nodes
 latencyVariation = 0  # us, 0 for synchronous network
@@ -26,7 +27,7 @@ completedTransmissionCount = 0  # counter for completed transmissions
 nodeCount = math.floor(
     math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))  # Simulated nodes
 
-f = open('nodeCountTT64_simp05_gauss2.csv', 'w')
+f = open('nodeCountTT64_simp05_gauss4.csv', 'w')
 writer = csv.writer(f)
 writer.writerow(["Nodes total", "Nodes during each observation", "Broken frames due to collision", "Completed "
                                                                                                    "transmissions"])
