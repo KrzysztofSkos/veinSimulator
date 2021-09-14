@@ -27,7 +27,7 @@ completedTransmissionCount = 0  # counter for completed transmissions
 nodeCount = math.floor(
     math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6))  # Simulated nodes
 
-f = open('nodeCountTT64_simp05_gauss4.csv', 'w')
+f = open('nodeCountTT64_simp05_gauss7.csv', 'w')
 writer = csv.writer(f)
 writer.writerow(["Nodes total", "Nodes during each observation", "Broken frames due to collision", "Completed "
                                                                                                    "transmissions"])
@@ -53,7 +53,7 @@ for nt in range(1000, 2000000, 1000):
 
         # Generating nano nodes and maxOffset
         for i in range(nodeCount):
-            node = NanoNode(veinDiameter, veinLength, [0, veinDiameter / 2, veinLength - 2], latencyVariation + 1, i,
+            node = NanoNode(veinDiameter, veinLength, [0, veinDiameter / 2, veinLength - 0.5], latencyVariation + 1, i,
                             transmissionTime)
             nodeList.append(node)
             if node.offset > maxOffset:
