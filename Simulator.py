@@ -38,7 +38,7 @@ data = []
 
 for nt in range(1000, 2000000, 1000):
     nodeTotal = nt
-    nodeCountBase = math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (22.4 * 10 ** 6)
+    nodeCountBase = math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (4 * bloodVolume)
     nodeCountList = []
     brokenFrames = 0
     completedTransmissionCount = 0
