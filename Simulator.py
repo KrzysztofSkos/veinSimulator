@@ -36,7 +36,7 @@ t = time.time()
 print(datetime.now().time())
 data = []
 
-for nt in range(1000, 500000, 1000):
+for nt in range(1000, 100000, 100):
     nodeTotal = nt
     nodeCountBase = math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (4 * bloodVolume)
     nodeCountList = []
