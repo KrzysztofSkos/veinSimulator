@@ -71,7 +71,7 @@ class NanoNode:
         :return: -
         """
         self.x += self.velocity
-        if self.transmissionTime >= 0 and not self.collision:
+        if self.transmissionTime >= 0:
             if self.offset > 0:
                 self.offset -= 1
             if self.offset <= 0:
