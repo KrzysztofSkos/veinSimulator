@@ -78,7 +78,7 @@ class NanoNode:
                 self.isSendingMessage = True
                 self.transmissionTime -= 1
             self.inRouterRange = self.checkRouterRange(self.routerCoordinates)
-            if self.transmissionTime == 0 and self.inRouterRange:
+            if self.transmissionTime == 0 and self.inRouterRange and not self.collision:
                 self.commSuccess = True
         else:
             self.isSendingMessage = False
