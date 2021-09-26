@@ -27,7 +27,7 @@ completedTransmissionCount = 0  # counter for completed transmissions
 nodeCount = math.floor(
     math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (4 * bloodVolume))  # Simulated nodes
 
-f = open('Results/paper/nodeCountTT64_simp05_gauss9.csv', 'w')
+f = open('../Results/paper/nodeCountTT64_simp05_gauss10.csv', 'w')
 writer = csv.writer(f)
 writer.writerow(["Nodes total", "Nodes during each observation", "Broken frames due to collision", "Completed "
                                                                                                    "transmissions"])
