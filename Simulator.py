@@ -12,13 +12,15 @@ import numpy as np
 import csv
 
 transmissionTime = 64
-simulationQuantity = 100
+simulationQuantity = 1000
 veinLength = 6  # mm
 bloodVolume = 5*10**6
 veinDiameter = 2 * math.sqrt(bloodVolume / (240 * 60 * math.pi * 1))
 print("Diameter: ", veinDiameter)
 nodeTotal = 500000  # total number of nodes
 latencyVariation = 0  # us, 0 for synchronous network
+prob = 1 / (240 * 60)
+prob_a = math.pi * veinDiameter ** 2 * veinLength / (4 * bloodVolume)
 
 # Event counters and setting variables
 maxOffset = 0  # max latency generated for simulation in us
@@ -44,7 +46,10 @@ for nt in range(1000, 100000, 100):
     completedTransmissionCount = 0
 
     for z in range(simulationQuantity):
-        nodeCount = round(nodeCountBase + np.random.normal(0, 0.3, 1)[0])
+        # nodeCount = round(nodeCountBase + np.random.normal(0, 0.3, 1)[0])
+        # print("Prob for ", nt, "nodes: ")
+        # print(np.random.binomial(100000, prob, 1))
+        nodeCount = np.random.binomial(nt, prob_a, 1)[0]
         nodeCountList.append(nodeCount)
         maxOffset = 0
         nodeList = []
