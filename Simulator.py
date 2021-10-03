@@ -14,7 +14,7 @@ import csv
 transmissionTime = 64
 simulationQuantity = 1000
 veinLength = 6  # mm
-bloodVolume = 5*10**6
+bloodVolume = 4.8*10**6
 veinDiameter = 2 * math.sqrt(bloodVolume / (240 * 60 * math.pi * 1))
 print("Diameter: ", veinDiameter)
 nodeTotal = 500000  # total number of nodes
@@ -29,7 +29,7 @@ completedTransmissionCount = 0  # counter for completed transmissions
 nodeCount = math.floor(
     math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (4 * bloodVolume))  # Simulated nodes
 
-f = open('../Results/paper/nodeCountTT64_simp05_gauss10.csv', 'w')
+f = open('../Results/distribution/nodeCount_bernoulli_wrong.csv', 'w')
 writer = csv.writer(f)
 writer.writerow(["Nodes total", "Nodes during each observation", "Broken frames due to collision", "Completed "
                                                                                                    "transmissions"])
@@ -47,9 +47,9 @@ for nt in range(1000, 100000, 100):
 
     for z in range(simulationQuantity):
         # nodeCount = round(nodeCountBase + np.random.normal(0, 0.3, 1)[0])
-        # print("Prob for ", nt, "nodes: ")
-        # print(np.random.binomial(100000, prob, 1))
-        nodeCount = np.random.binomial(nt, prob_a, 1)[0]
+        # nodeCount = round(np.random.normal(nt, 0.001*nt, 1)[0])
+        # nodeCount = np.random.binomial(nt, prob_a, 1)[0]
+        nodeCount = round(nodeCountBase + np.random.binomial(10, 0.33, 1)[0]/10)
         nodeCountList.append(nodeCount)
         maxOffset = 0
         nodeList = []
