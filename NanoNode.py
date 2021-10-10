@@ -4,9 +4,11 @@
 Created on May 03 20:55:07 2021
 @author: krzysztof_skos
 """
-
+import math
 from random import uniform, randrange
 from math import dist, cos, sin, pi
+
+import numpy
 
 
 class NanoNode:
@@ -37,12 +39,7 @@ class NanoNode:
         """
         self.transmissionTime = transmissionTime
         self.id = iD
-        # TODO zmiana losowania na kartezjańskie
-        self.phi = uniform(0, 2 * pi)
-        self.R = uniform(0, d / 2)
-        self.x = uniform(0, veinLength)
-        self.coordinateY = self.R * cos(self.phi)
-        self.coordinateZ = self.R * sin(self.phi)
+        self.drawCoordinates(d, veinLength)
         self.velocity = v_sr * 2 * ((d / 2) ** 2 - self.R ** 2) / ((d / 2) ** 2)
         self.velocity = self.velocity / 10 ** 6  # Zmiana prędkości z mm/s na mm/us
         self.offset = randrange(offsetRange)
@@ -54,7 +51,30 @@ class NanoNode:
         self.routerCoordinates = routerCoordinates
         self.inRouterRange = self.checkRouterRange(routerCoordinates)
 
+    def drawCoordinates(self, d, veinLength):
+        """
 
+        :return:
+        """
+        self.R = d
+        while self.R > d/2:
+            self.coordinateY = uniform(-d/2, d/2)
+            self.coordinateZ = uniform(-d/2, d/2)
+            self.R = math.sqrt(self.coordinateY ** 2 + self.coordinateZ ** 2)
+        self.x = uniform(0, veinLength)
+        self.calculatePhi(self.coordinateY, self.coordinateZ)
+
+    def calculatePhi(self, y, z):
+        if y > 0 and z >= 0:
+            self.phi = numpy.arctan(z / y)
+        if y > 0 and z < 0:
+            self.phi = numpy.arctan(z / y) + 2 * math.pi
+        if y < 0:
+            self.phi = numpy.arctan(z / y) + math.pi
+        if y == 0 and z > 0:
+            self.phi = math.pi / 2
+        if y == 0 and z < 0:
+            self.phi = 3 * math.pi / 2
 
     def checkRouterRange(self, routerCoordinates):
         """
