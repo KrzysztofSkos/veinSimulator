@@ -8,9 +8,11 @@ import math
 import time
 from datetime import datetime
 from NanoNode import NanoNode
+import Drawing
 import numpy as np
 import csv
 
+drawPlot = False
 transmissionTime = 64
 simulationQuantity = 100
 veinLength = 6  # mm
@@ -19,6 +21,8 @@ veinDiameter = 2 * math.sqrt(bloodVolume / (240 * 60 * math.pi * 1))
 print("Diameter: ", veinDiameter)
 nodeTotal = 500000  # total number of nodes
 latencyVariation = 0  # us, 0 for synchronous network
+prob = 1 / (240 * 60)
+prob_a = math.pi * veinDiameter ** 2 * veinLength / (4 * bloodVolume)
 
 # Event counters and setting variables
 maxOffset = 0  # max latency generated for simulation in us
@@ -27,7 +31,7 @@ completedTransmissionCount = 0  # counter for completed transmissions
 nodeCount = math.floor(
     math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (4 * bloodVolume))  # Simulated nodes
 
-f = open('../Results/paper/nodeCountTT64_simp05_gauss10.csv', 'w')
+f = open('../Results/distribution/nodeCount_bernoulli_wrong.csv', 'w')
 writer = csv.writer(f)
 writer.writerow(["Nodes total", "Nodes during each observation", "Broken frames due to collision", "Completed "
                                                                                                    "transmissions"])
@@ -44,7 +48,10 @@ for nt in range(1000, 100000, 100):
     completedTransmissionCount = 0
 
     for z in range(simulationQuantity):
-        nodeCount = round(nodeCountBase + np.random.normal(0, 0.3, 1)[0])
+        # nodeCount = round(nodeCountBase + np.random.normal(0, 0.3, 1)[0])
+        # nodeCount = round(np.random.normal(nt, 0.001*nt, 1)[0])
+        # nodeCount = np.random.binomial(nt, prob_a, 1)[0]
+        nodeCount = round(nodeCountBase + np.random.binomial(10, 0.33, 1)[0]/10)
         nodeCountList.append(nodeCount)
         maxOffset = 0
         nodeList = []
@@ -65,6 +72,12 @@ for nt in range(1000, 100000, 100):
         if len(sendingNodeList) > 1:
             for node in sendingNodeList:
                 nodeList[node.id].setCollision(True)
+
+        # Drawing start plot
+        if drawPlot:
+            fig = plt.figure()
+            ax = fig.add_subplot(111, projection='3d')
+            Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)  # Dlaczego promień+1?
 
         # Simulation - 1 us step
         for x in np.arange(0, transmissionTime + maxOffset, 1):
