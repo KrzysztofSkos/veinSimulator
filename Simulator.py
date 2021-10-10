@@ -8,6 +8,7 @@ import math
 import time
 from datetime import datetime
 from NanoNode import NanoNode
+import matplotlib.pyplot as plt
 import Drawing
 import numpy as np
 import csv
@@ -30,7 +31,7 @@ completedTransmissionCount = 0  # counter for completed transmissions
 nodeCount = math.floor(
     math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (4 * bloodVolume))  # Simulated nodes
 
-f = open('../Results/distribution/nodeCount_bernoulli_wrong.csv', 'w')
+f = open('../Results/temp/nodeCount_bernoulli_wrong.csv', 'w')
 writer = csv.writer(f)
 writer.writerow(["Nodes total", "Nodes during each observation", "Broken frames due to collision", "Completed "
                                                                                                    "transmissions"])
@@ -86,6 +87,12 @@ for nt in range(1000, 100000, 100):
             if len(sendingNodeList) > 1:
                 for nd in sendingNodeList:
                     nodeList[nd.id].setCollision(True)
+
+        # Drawing end plot
+        if drawPlot:
+            fig = plt.figure()
+            ax = fig.add_subplot(111, projection='3d')
+            Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)
 
         # Counting broken frames
         for node in nodeList:
