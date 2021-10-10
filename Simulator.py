@@ -14,11 +14,10 @@ import csv
 
 drawPlot = False
 transmissionTime = 64
-simulationQuantity = 100
+simulationQuantity = 1000
 veinLength = 6  # mm
 bloodVolume = 5*10**6
-veinDiameter = 2 * math.sqrt(bloodVolume / (240 * 60 * math.pi * 1))
-print("Diameter: ", veinDiameter)
+veinDiameter = 21
 nodeTotal = 500000  # total number of nodes
 latencyVariation = 0  # us, 0 for synchronous network
 prob = 1 / (240 * 60)
@@ -48,10 +47,7 @@ for nt in range(1000, 100000, 100):
     completedTransmissionCount = 0
 
     for z in range(simulationQuantity):
-        # nodeCount = round(nodeCountBase + np.random.normal(0, 0.3, 1)[0])
-        # nodeCount = round(np.random.normal(nt, 0.001*nt, 1)[0])
-        # nodeCount = np.random.binomial(nt, prob_a, 1)[0]
-        nodeCount = round(nodeCountBase + np.random.binomial(10, 0.33, 1)[0]/10)
+        nodeCount = np.random.binomial(nt, prob_a, 1)[0]
         nodeCountList.append(nodeCount)
         maxOffset = 0
         nodeList = []
@@ -77,7 +73,7 @@ for nt in range(1000, 100000, 100):
         if drawPlot:
             fig = plt.figure()
             ax = fig.add_subplot(111, projection='3d')
-            Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)  # Dlaczego promień+1?
+            Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)
 
         # Simulation - 1 us step
         for x in np.arange(0, transmissionTime + maxOffset, 1):
@@ -103,7 +99,7 @@ for nt in range(1000, 100000, 100):
                 if node.commSuccess:
                     completedTransmissionCount += 1
 
-    #data.append([nt, nodeCount, brokenFrames, completedTransmissionCount])
+    # data.append([nt, nodeCount, brokenFrames, completedTransmissionCount])
     writer.writerow([nt, np.mean(nodeCountList), brokenFrames, completedTransmissionCount])
-#writer.writerows(data)
+# writer.writerows(data)
 print(time.time() - t)
