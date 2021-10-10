@@ -37,6 +37,7 @@ class NanoNode:
         """
         self.transmissionTime = transmissionTime
         self.id = iD
+        # TODO zmiana losowania na kartezjańskie
         self.phi = uniform(0, 2 * pi)
         self.R = uniform(0, d / 2)
         self.x = uniform(0, veinLength)
