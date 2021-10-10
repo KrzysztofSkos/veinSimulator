@@ -53,8 +53,9 @@ class NanoNode:
 
     def drawCoordinates(self, d, veinLength):
         """
+        Method for drawing coordinates.
 
-        :return:
+        :return: -
         """
         self.R = d
         while self.R > d/2:
@@ -65,6 +66,13 @@ class NanoNode:
         self.calculatePhi(self.coordinateY, self.coordinateZ)
 
     def calculatePhi(self, y, z):
+        """
+        Method for calculating phi for polar coordinate system
+
+        :param y: Cartesian coordinate y
+        :param z: Cartesian coordinate z
+        :return:
+        """
         if y > 0 and z >= 0:
             self.phi = numpy.arctan(z / y)
         if y > 0 and z < 0:
