@@ -5,7 +5,6 @@ Created on May 03 20:55:07 2021
 @author: krzysztof_skos
 """
 import math
-import time
 from datetime import datetime
 from NanoNode import NanoNode
 import matplotlib.pyplot as plt
@@ -15,12 +14,12 @@ import csv
 
 drawPlot = False
 transmissionTime = 64
-simulationQuantity = 1000
+simulationQuantity = 100
 veinLength = 6  # mm
 bloodVolume = 5*10**6
-veinDiameter = 21
+veinDiameter = 10
 nodeTotal = 500000  # total number of nodes
-latencyVariation = 0  # us, 0 for synchronous network
+latencyVariation = 50  # us, 0 for synchronous network
 prob = 1 / (240 * 60)
 prob_a = math.pi * veinDiameter ** 2 * veinLength / (4 * bloodVolume)
 
@@ -31,16 +30,15 @@ completedTransmissionCount = 0  # counter for completed transmissions
 nodeCount = math.floor(
     math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (4 * bloodVolume))  # Simulated nodes
 
-f = open('../Results/temp/nodeCount_bernoulli_wrong.csv', 'w')
+f = open('../Results/async_test/nodeCount_11.csv', 'w')
 writer = csv.writer(f)
 writer.writerow(["Nodes total", "Nodes during each observation", "Broken frames due to collision", "Completed "
                                                                                                    "transmissions"])
 
-t = time.time()
 print(datetime.now().time())
 data = []
 
-for nt in range(1000, 100000, 100):
+for nt in range(1000, 4000000, 1000):
     nodeTotal = nt
     nodeCountBase = math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (4 * bloodVolume)
     nodeCountList = []
@@ -98,7 +96,7 @@ for nt in range(1000, 100000, 100):
         for node in nodeList:
             if node.collision:
                 brokenFrames += 1
-                collision = True
+#                collision = True
 
         # Counting completed transmissions
         if not collision:
@@ -108,5 +106,6 @@ for nt in range(1000, 100000, 100):
 
     # data.append([nt, nodeCount, brokenFrames, completedTransmissionCount])
     writer.writerow([nt, np.mean(nodeCountList), brokenFrames, completedTransmissionCount])
+
 # writer.writerows(data)
-print(time.time() - t)
+print(datetime.now().time())

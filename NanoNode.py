@@ -21,6 +21,7 @@ class NanoNode:
     isSendingMessage = True
     offset = 0  # us
     commSuccess = False
+    commFail = False
     velocity = 1
     routerCoordinates = []
     collision = False
@@ -107,8 +108,10 @@ class NanoNode:
             if self.offset <= 0:
                 self.isSendingMessage = True
                 self.transmissionTime -= 1
-            self.inRouterRange = self.checkRouterRange(self.routerCoordinates)
-            if self.transmissionTime == 0 and self.inRouterRange and not self.collision:
+                self.inRouterRange = self.checkRouterRange(self.routerCoordinates)
+                if not self.inRouterRange:
+                    self.commFail = True
+            if self.transmissionTime == 0 and not self.commFail and not self.collision:
                 self.commSuccess = True
         else:
             self.isSendingMessage = False
