@@ -14,12 +14,12 @@ import csv
 
 drawPlot = False
 transmissionTime = 64
-simulationQuantity = 100
+simulationQuantity = 1000
 veinLength = 6  # mm
 bloodVolume = 5*10**6
-veinDiameter = 10
+veinDiameter = 4
 nodeTotal = 500000  # total number of nodes
-latencyVariation = 50  # us, 0 for synchronous network
+latencyVariation = 100  # ms * 10 # us, 0 for synchronous network
 prob = 1 / (240 * 60)
 prob_a = math.pi * veinDiameter ** 2 * veinLength / (4 * bloodVolume)
 
@@ -30,7 +30,7 @@ completedTransmissionCount = 0  # counter for completed transmissions
 nodeCount = math.floor(
     math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (4 * bloodVolume))  # Simulated nodes
 
-f = open('../Results/async_test/nodeCount_11.csv', 'w')
+f = open('../Results/pierwsze_wyniki/nodeCount_async_longeroffset_vein4.csv', 'w')
 writer = csv.writer(f)
 writer.writerow(["Nodes total", "Nodes during each observation", "Broken frames due to collision", "Completed "
                                                                                                    "transmissions"])
@@ -38,7 +38,7 @@ writer.writerow(["Nodes total", "Nodes during each observation", "Broken frames 
 print(datetime.now().time())
 data = []
 
-for nt in range(1000, 4000000, 1000):
+for nt in range(3054000, 4000000, 1000):
     nodeTotal = nt
     nodeCountBase = math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (4 * bloodVolume)
     nodeCountList = []

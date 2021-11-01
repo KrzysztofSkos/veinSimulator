@@ -44,6 +44,7 @@ class NanoNode:
         self.velocity = v_sr * 2 * ((d / 2) ** 2 - self.R ** 2) / ((d / 2) ** 2)
         self.velocity = self.velocity / 10 ** 6  # Zmiana prędkości z mm/s na mm/us
         self.offset = randrange(offsetRange)
+        self.offset = self.offset * 100 # Zmiana ms na us
         self.commSuccess = False
         if self.offset == 0:
             self.isSendingMessage = True
