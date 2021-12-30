@@ -11,7 +11,7 @@ import numpy as np
 
 def data_for_cylinder_along_z(center_x, center_y, radius, height_z):
     """
-    Method for creating grid for cylinder drawing. Cylinder will be created along Z axis.
+    Method for creating grid for cylinder drawing. Cylinder will be created along Z axis
     :param center_x: Euclidean 3 dimensional center of drawing on X axis
     :param center_y: Euclidean 3 dimensional center of drawing on Y axis
     :param radius: cylinder radius
