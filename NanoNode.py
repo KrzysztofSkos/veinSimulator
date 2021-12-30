@@ -106,5 +106,5 @@ class NanoNode:
         print("Is sending message? " + str(self.isSendingMessage))
         print("In router range? " + str(self.inRouterRange))
         print("Transmission time: " + str(self.transmissionTime))
-        print("Communication succeded? " + str(self.commSuccess))
+        print("Communication succeeded? " + str(self.commSuccess))
         print("================================")
