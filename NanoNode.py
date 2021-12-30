@@ -6,7 +6,7 @@ Created on May 03 20:55:07 2021
 """
 import math
 from random import uniform, randrange
-from math import dist, cos, sin, pi
+from math import dist
 
 import numpy
 
@@ -42,9 +42,9 @@ class NanoNode:
         self.id = iD
         self.drawCoordinates(d, veinLength)
         self.velocity = v_sr * 2 * ((d / 2) ** 2 - self.R ** 2) / ((d / 2) ** 2)
-        self.velocity = self.velocity / 10 ** 6  # Zmiana prędkości z mm/s na mm/us
+        self.velocity = self.velocity / 10 ** 6  # Change velocity unit from mm/s to mm/us
         self.offset = randrange(offsetRange)
-        self.offset = self.offset * 100 # Zmiana ms na us
+        self.offset = self.offset * 100  # Change unit from ms to 10 us
         self.commSuccess = False
         if self.offset == 0:
             self.isSendingMessage = True
@@ -60,9 +60,9 @@ class NanoNode:
         :return: -
         """
         self.R = d
-        while self.R > d/2:
-            self.coordinateY = uniform(-d/2, d/2)
-            self.coordinateZ = uniform(-d/2, d/2)
+        while self.R > d / 2:
+            self.coordinateY = uniform(-d / 2, d / 2)
+            self.coordinateZ = uniform(-d / 2, d / 2)
             self.R = math.sqrt(self.coordinateY ** 2 + self.coordinateZ ** 2)
         self.x = uniform(0, veinLength)
         self.calculatePhi(self.coordinateY, self.coordinateZ)
@@ -70,7 +70,6 @@ class NanoNode:
     def calculatePhi(self, y, z):
         """
         Method for calculating phi for polar coordinate system
-
         :param y: Cartesian coordinate y
         :param z: Cartesian coordinate z
         :return:
