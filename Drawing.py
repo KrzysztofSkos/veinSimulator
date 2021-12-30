@@ -12,9 +12,9 @@ import numpy as np
 def data_for_cylinder_along_z(center_x, center_y, radius, height_z):
     """
     Method for creating grid for cylinder drawing. Cylinder will be created along Z axis.
-    :param center_x: Euclidean 3 dimentional center of drawing on X axis
-    :param center_y: Euclidean 3 dimentional center of drawing on Y axis
-    :param radius: cylinder radious
+    :param center_x: Euclidean 3 dimensional center of drawing on X axis
+    :param center_y: Euclidean 3 dimensional center of drawing on Y axis
+    :param radius: cylinder radius
     :param height_z: cylinder height
     :return: Three lists with grid coordinates for z, y, x sequentially
     """
@@ -28,7 +28,7 @@ def data_for_cylinder_along_z(center_x, center_y, radius, height_z):
 
 def drawPlot(rad, ax, nodeList, length):
     """
-    Method for drawing plot during symulation
+    Method for drawing plot during simulation
     :param rad: vein radius
     :param ax: instance of figure() with subplot
     :param nodeList: list of nodes to draw

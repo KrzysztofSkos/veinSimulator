@@ -37,14 +37,14 @@ class NanoNode:
         """
         self.transmissionTime = transmissionTime
         self.id = iD
-        # TODO zmiana losowania na kartezjańskie
+        # TODO change drawing method
         self.phi = uniform(0, 2 * pi)
         self.R = uniform(0, d / 2)
         self.x = uniform(0, veinLength)
         self.coordinateY = self.R * cos(self.phi)
         self.coordinateZ = self.R * sin(self.phi)
-        self.velocity = v_sr# * 2 * ((d / 2) ** 2 - self.R ** 2) / ((d / 2) ** 2)
-        self.velocity = self.velocity / 10 ** 6  # Zmiana prędkości z mm/s na mm/us
+        self.velocity = v_sr  # * 2 * ((d / 2) ** 2 - self.R ** 2) / ((d / 2) ** 2)
+        self.velocity = self.velocity / 10 ** 6  # Velocity unit change from mm/s to mm/us
         self.offset = randrange(offsetRange)
         self.commSuccess = False
         if self.offset == 0:
