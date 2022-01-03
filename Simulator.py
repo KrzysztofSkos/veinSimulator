@@ -22,7 +22,7 @@ nodeTotal = 500000  # total number of nodes
 latencyVariation = 0  # ms * 10 # us, 0 for synchronous network
 prob = 1 / (240 * 60)
 prob_a = math.pi * veinDiameter ** 2 * veinLength / (4 * bloodVolume)
-routerRange = 2 # mm
+routerRange = 2  # mm
 
 # Event counters and setting variables
 maxOffset = 0  # max latency generated for simulation in us
