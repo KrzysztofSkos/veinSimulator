@@ -73,7 +73,7 @@ for nt in range(1000, 4000000, 1000):
         if drawPlot:
             fig = plt.figure()
             ax = fig.add_subplot(111, projection='3d')
-            Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength, routerRange)
+            Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)
 
         # Simulation - 1 us step
         for x in np.arange(0, transmissionTime + maxOffset, 1):
@@ -91,7 +91,7 @@ for nt in range(1000, 4000000, 1000):
         if drawPlot:
             fig = plt.figure()
             ax = fig.add_subplot(111, projection='3d')
-            Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength, routerRange)
+            Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)
 
         # Counting broken frames
         for node in nodeList:
