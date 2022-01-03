@@ -56,8 +56,8 @@ for nt in range(1000, 4000000, 1000):
 
         # Generating nano nodes and maxOffset
         for i in range(nodeCount):
-            node = NanoNode(routerRange, veinDiameter, veinLength, [0, veinDiameter / 2, veinLength - 1.5], latencyVariation + 1, i,
-                            transmissionTime)
+            node = NanoNode(routerRange, veinDiameter, veinLength, [0, veinDiameter / 2, veinLength - 1.5],
+                            latencyVariation + 1, i, transmissionTime)
             nodeList.append(node)
             if node.offset > maxOffset:
                 maxOffset = node.offset
@@ -91,7 +91,7 @@ for nt in range(1000, 4000000, 1000):
         if drawPlot:
             fig = plt.figure()
             ax = fig.add_subplot(111, projection='3d')
-            Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)
+            Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength, routerRange)
 
         # Counting broken frames
         for node in nodeList:
