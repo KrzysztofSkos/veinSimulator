@@ -26,10 +26,12 @@ class NanoNode:
     routerCoordinates = []
     collision = False
     id = 0
+    routerRange = 2
 
-    def __init__(self, d, veinLength, routerCoordinates, offsetRange, iD, transmissionTime=64, v_sr=240):
+    def __init__(self, routerRange, d, veinLength, routerCoordinates, offsetRange, iD, transmissionTime=64, v_sr=240):
         """
         Class constructor
+        :param routerRange: range of the router
         :param d: simulated vein diameter
         :param veinLength: simulated vein length
         :param routerCoordinates: list with 3 dimensional Euclidean coordinates
@@ -38,6 +40,7 @@ class NanoNode:
         :param transmissionTime: frame length
         :param v_sr: mean velocity of node in vein in mm/s
         """
+        self.routerRange = routerRange
         self.transmissionTime = transmissionTime
         self.id = iD
         self.drawCoordinates(d, veinLength)
@@ -91,7 +94,7 @@ class NanoNode:
         :param routerCoordinates: list with 3 dimensional Euclidean coordinates
         :return: True if node is in router range, False otherwise
         """
-        if dist(routerCoordinates, [self.coordinateY, self.coordinateZ, self.x]) < 2:
+        if dist(routerCoordinates, [self.coordinateY, self.coordinateZ, self.x]) < self.routerRange:
             return True
         else:
             return False

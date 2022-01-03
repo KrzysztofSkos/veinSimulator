@@ -22,6 +22,7 @@ nodeTotal = 500000  # total number of nodes
 latencyVariation = 0  # ms * 10 # us, 0 for synchronous network
 prob = 1 / (240 * 60)
 prob_a = math.pi * veinDiameter ** 2 * veinLength / (4 * bloodVolume)
+routerRange = 2 # mm
 
 # Event counters and setting variables
 maxOffset = 0  # max latency generated for simulation in us
@@ -55,7 +56,7 @@ for nt in range(1000, 4000000, 1000):
 
         # Generating nano nodes and maxOffset
         for i in range(nodeCount):
-            node = NanoNode(veinDiameter, veinLength, [0, veinDiameter / 2, veinLength - 1.5], latencyVariation + 1, i,
+            node = NanoNode(routerRange, veinDiameter, veinLength, [0, veinDiameter / 2, veinLength - 1.5], latencyVariation + 1, i,
                             transmissionTime)
             nodeList.append(node)
             if node.offset > maxOffset:
@@ -72,7 +73,7 @@ for nt in range(1000, 4000000, 1000):
         if drawPlot:
             fig = plt.figure()
             ax = fig.add_subplot(111, projection='3d')
-            Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)
+            Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength, routerRange)
 
         # Simulation - 1 us step
         for x in np.arange(0, transmissionTime + maxOffset, 1):

@@ -26,18 +26,19 @@ def data_for_cylinder_along_z(center_x, center_y, radius, height_z):
     return z_grid, y_grid, x_grid
 
 
-def drawPlot(rad, ax, nodeList, length):
+def drawPlot(rad, ax, nodeList, length, routerRange):
     """
     Method for drawing plot during simulation
     :param rad: vein radius
     :param ax: instance of figure() with subplot
     :param nodeList: list of nodes to draw
     :param length: cylinder length
+    :param routerRange: range of the router
     :return:
     """
     ax.clear()
-    ax.scatter(length-2, 0, rad, marker="o")  # router
-    ax.text(length - 1.9, 0, rad, "router")
+    ax.scatter(length - routerRange, 0, rad, marker="o")  # router
+    ax.text(length - routerRange + 0.1, 0, rad, "router")
     for node in nodeList:
         if node.x <= length:
             if node.inRouterRange:
