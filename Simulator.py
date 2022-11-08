@@ -7,19 +7,19 @@ Created on May 03 20:55:07 2021
 import math
 from datetime import datetime
 from NanoNode import NanoNode
-import matplotlib.pyplot as plt
-import Drawing
+# import matplotlib.pyplot as plt
+# import Drawing
 import numpy as np
 import csv
 
 drawPlot = False
-transmissionTime = 64
-simulationQuantity = 1000
-veinLength = 6  # mm
-bloodVolume = 5*10**6
-veinDiameter = 4
+transmissionTime = 512
+simulationQuantity = 1
+veinLength = 3  # mm
+bloodVolume = 5 * 10 ** 6
+veinDiameter = 6
 nodeTotal = 500000  # total number of nodes
-latencyVariation = 100  # ms * 10 # us, 0 for synchronous network
+latencyVariation = 0  # us, 0 for synchronous network
 prob = 1 / (240 * 60)
 prob_a = math.pi * veinDiameter ** 2 * veinLength / (4 * bloodVolume)
 
@@ -30,23 +30,23 @@ completedTransmissionCount = 0  # counter for completed transmissions
 nodeCount = math.floor(
     math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (4 * bloodVolume))  # Simulated nodes
 
-f = open('../Results/pierwsze_wyniki/nodeCount_async_longeroffset_vein4.csv', 'w')
+f = open('../Results/testInzynierkiStudenta/inzynierkaScenariuszMilionLength3mm.csv', 'w')
 writer = csv.writer(f)
-writer.writerow(["Nodes total", "Nodes during each observation", "Broken frames due to collision", "Completed "
-                                                                                                   "transmissions"])
+writer.writerow(["Iteration number", "Nodes during each observation", "Broken frames due to collision", "Completed "
+                                                                                                        "transmissions"])
 
 print(datetime.now().time())
 data = []
 
-for nt in range(3054000, 4000000, 1000):
+for nt in range(0, 1000000, 1):  # Only one iteration
     nodeTotal = nt
-    nodeCountBase = math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (4 * bloodVolume)
+    # nodeCountBase = math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (4 * bloodVolume)
     nodeCountList = []
     brokenFrames = 0
     completedTransmissionCount = 0
 
     for z in range(simulationQuantity):
-        nodeCount = np.random.binomial(nt, prob_a, 1)[0]
+        nodeCount = 1  # Only one node in this scenario
         nodeCountList.append(nodeCount)
         maxOffset = 0
         nodeList = []
@@ -55,8 +55,8 @@ for nt in range(3054000, 4000000, 1000):
 
         # Generating nano nodes and maxOffset
         for i in range(nodeCount):
-            node = NanoNode(veinDiameter, veinLength, [0, veinDiameter / 2, veinLength - 0.5], latencyVariation + 1, i,
-                            transmissionTime)
+            node = NanoNode(veinDiameter, veinLength, [0, veinDiameter / 2, veinLength - 1], latencyVariation + 1, i,
+                            transmissionTime, v_sr=110)
             nodeList.append(node)
             if node.offset > maxOffset:
                 maxOffset = node.offset
@@ -69,10 +69,10 @@ for nt in range(3054000, 4000000, 1000):
                 nodeList[node.id].setCollision(True)
 
         # Drawing start plot
-        if drawPlot:
-            fig = plt.figure()
-            ax = fig.add_subplot(111, projection='3d')
-            Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)
+        # if drawPlot:
+        #     fig = plt.figure()
+        #     ax = fig.add_subplot(111, projection='3d')
+        #     Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)
 
         # Simulation - 1 us step
         for x in np.arange(0, transmissionTime + maxOffset, 1):
@@ -87,16 +87,16 @@ for nt in range(3054000, 4000000, 1000):
                     nodeList[nd.id].setCollision(True)
 
         # Drawing end plot
-        if drawPlot:
-            fig = plt.figure()
-            ax = fig.add_subplot(111, projection='3d')
-            Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)
+        # if drawPlot:
+        #     fig = plt.figure()
+        #     ax = fig.add_subplot(111, projection='3d')
+        #     Drawing.drawPlot(veinDiameter / 2 + 1, ax, nodeList, veinLength)
 
         # Counting broken frames
         for node in nodeList:
             if node.collision:
                 brokenFrames += 1
-#                collision = True
+        #                collision = True
 
         # Counting completed transmissions
         if not collision:

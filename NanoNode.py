@@ -27,7 +27,7 @@ class NanoNode:
     collision = False
     id = 0
 
-    def __init__(self, d, veinLength, routerCoordinates, offsetRange, iD, transmissionTime=64, v_sr=240):
+    def __init__(self, d, veinLength, routerCoordinates, offsetRange, iD, transmissionTime=64, v_sr=110):
         """
         Class constructor
         :param d: simulated vein diameter
@@ -41,10 +41,10 @@ class NanoNode:
         self.transmissionTime = transmissionTime
         self.id = iD
         self.drawCoordinates(d, veinLength)
-        self.velocity = v_sr * 2 * ((d / 2) ** 2 - self.R ** 2) / ((d / 2) ** 2)
+        self.velocity = v_sr  # Constant velocity
         self.velocity = self.velocity / 10 ** 6  # Zmiana prędkości z mm/s na mm/us
         self.offset = randrange(offsetRange)
-        self.offset = self.offset * 100 # Zmiana ms na us
+        #self.offset = self.offset * 100 # Zmiana ms na us
         self.commSuccess = False
         if self.offset == 0:
             self.isSendingMessage = True
@@ -92,7 +92,7 @@ class NanoNode:
         :param routerCoordinates: list with 3 dimensional Euclidean coordinates
         :return: True if node is in router range, False otherwise
         """
-        if dist(routerCoordinates, [self.coordinateY, self.coordinateZ, self.x]) < 2:
+        if dist(routerCoordinates, [self.coordinateY, self.coordinateZ, self.x]) < 1:
             return True
         else:
             return False
