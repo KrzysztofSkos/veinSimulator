@@ -64,7 +64,7 @@ class NanoNode:
             self.coordinateY = uniform(-d/2, d/2)
             self.coordinateZ = uniform(-d/2, d/2)
             self.R = math.sqrt(self.coordinateY ** 2 + self.coordinateZ ** 2)
-        self.x = uniform(0, veinLength)
+        self.x = uniform(0, 1)  # generowanie maszyn przed ruterem
         self.calculatePhi(self.coordinateY, self.coordinateZ)
 
     def calculatePhi(self, y, z):

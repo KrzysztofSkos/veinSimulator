@@ -19,7 +19,7 @@ veinLength = 3  # mm
 bloodVolume = 5 * 10 ** 6
 veinDiameter = 6
 nodeTotal = 500000  # total number of nodes
-latencyVariation = 0  # us, 0 for synchronous network
+latencyVariation = 1000000  # us, 0 for synchronous network
 prob = 1 / (240 * 60)
 prob_a = math.pi * veinDiameter ** 2 * veinLength / (4 * bloodVolume)
 
@@ -30,7 +30,7 @@ completedTransmissionCount = 0  # counter for completed transmissions
 nodeCount = math.floor(
     math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (4 * bloodVolume))  # Simulated nodes
 
-f = open('../Results/testInzynierkiStudenta/inzynierkaScenariuszMilionLength3mm.csv', 'w')
+f = open('../Results/testInzynierkiStudenta/inzynierkaScenariuszLength3mmNoweDane10milionowPart3.csv', 'w')
 writer = csv.writer(f)
 writer.writerow(["Iteration number", "Nodes during each observation", "Broken frames due to collision", "Completed "
                                                                                                         "transmissions"])
@@ -38,7 +38,7 @@ writer.writerow(["Iteration number", "Nodes during each observation", "Broken fr
 print(datetime.now().time())
 data = []
 
-for nt in range(0, 1000000, 1):  # Only one iteration
+for nt in range(686593, 10000000, 1):
     nodeTotal = nt
     # nodeCountBase = math.pi * veinDiameter ** 2 * veinLength * nodeTotal / (4 * bloodVolume)
     nodeCountList = []
